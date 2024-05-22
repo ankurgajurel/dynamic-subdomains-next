@@ -2,17 +2,15 @@ import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const hostname = request.headers.get("host");
+  const subdomain = hostname?.includes(".") ? hostname?.split(".")[0] : "";
 
-  console.log(request.nextUrl);
-  const subdomain = hostname?.split(".")[0];
-
-  console.log(subdomain);
+  console.log("host", hostname, "subdomain", subdomain);
 
   if (subdomain) {
     return NextResponse.rewrite(new URL(`/restro/${subdomain}`, request.url));
   }
 
-  return new Response(null, { status: 404 });
+  return NextResponse.next();
 }
 
 export const config = {
